@@ -1,0 +1,70 @@
+<h3 class="text-center my-3">Total order price is {{ totalOrderPrice }}</h3>
+<h3 class="text-center my-3">Selected Cat Id {{ selectedCatId }}</h3>
+
+<div class="mb-3 w-50 m-auto">
+  <label for="" class="form-label">Categories</label>
+  <select class="form-select form-select-lg" name="" id="" [(ngModel)]="selectedCatId">
+    @for (cat of categories; track cat.id) {
+      <option [value]="cat.id">{{ cat.name }}</option>
+    }
+  </select>
+</div>
+
+<div class="row row-cols-1 row-cols-md-4 g-4 m-5">
+  @for (prd of products; track prd.id; let i=$index,c=$count,f=$first,l=$last,e=$even,o=$odd) {
+    <!-- <div class="col" *ngFor="let prd of products;let i=index" [class.d-none]="prd.catId!=selectedCatId"> -->
+    <!-- <div class="col" [class.d-none]="prd.catId != selectedCatId"> -->
+    @if (prd.catId == selectedCatId) {
+      <!-- <div class="col" *ngIf="prd.catId==selectedCatId"> -->
+      <div class="col">
+        <!-- <div class="card" [ngClass]="(prd.quantity==0)?'bg-warning':'bg-light'"> -->
+      <!-- <div class="card" [ngClass]="{'bg-warning':prd.quantity==0,'text-danger':prd.quantity==0}"> -->
+      <div class="card" [ngStyle]="{'background-color':(prd.quantity==0)?'yellow':'white','color':(prd.quantity==0)?'red':'black'}">
+
+          <img [src]="prd.imgUrl" class="card-img-top" alt="..." />
+          <div class="card-body">
+            <h5 class="card-title">{{ e }} - {{ prd.name }}</h5>
+            <p class="card-text">Price is : {{ prd.price }}</p>
+            <!-- @if (prd.quantity == 0) {
+            <p class="card-text">Quantity is : Out of stock</p>
+          } @else if (prd.quantity == 1) {
+            <p class="card-text">Quantity is : Last item</p>
+          } @else {
+            <p class="card-text">Quantity is : {{ prd.quantity }}</p>
+          } -->
+
+            @switch (prd.quantity) {
+            @case(0){
+                <p class="card-text">Quantity is : Out of stock</p>
+            }
+            @case(1)
+            {
+              <p class="card-text">Quantity is : Last item</p>
+            }
+            @default{
+              <p class="card-text">Quantity is : {{ prd.quantity }}</p>
+            }
+          }
+
+            <!-- <div *ngSwitch="prd.quantity">
+              <p class="card-text" *ngSwitchCase="0">Quantity is : {{ prd.quantity }}</p>
+              <p class="card-text" *ngSwitchCase="1">Quantity is : Last item</p>
+              <p class="card-text" *ngSwitchDefault="">Quantity is : {{ prd.quantity }}</p>
+            </div> -->
+            <!-- template variable , refrence -->
+            <input type="number" #quantityInp />
+            <button
+              class="btn btn-success"
+              (click)="buy(prd.price, quantityInp.value)"
+              [disabled]="prd.quantity == 0"
+            >
+              Buy
+            </button>
+          </div>
+        </div>
+      </div>
+    }
+  } @empty {
+    <h1>No products to view</h1>
+  }
+</div>
