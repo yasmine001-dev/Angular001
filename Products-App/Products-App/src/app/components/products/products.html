@@ -1,0 +1,39 @@
+
+<div class="row row-cols-1 row-cols-md-4 g-4 m-5">
+  @for (prd of filteredProducts; track prd.id; let i=$index,c=$count,f=$first,l=$last,e=$even,o=$odd) {
+      <div class="col">
+        <div class="card">
+          <img [src]="prd.imgUrl" class="card-img-top" alt="..." />
+          <div class="card-body">
+            <h5 class="card-title">{{ prd.name | shorten: 4 }}</h5>
+            <p class="card-text">Price is : {{ prd.price | currency: 'EUR' : 'code' }}</p>
+            @switch (prd.quantity) {
+              @case (0) {
+                <p class="card-text">Quantity is : Out of stock</p>
+              }
+              @case (1) {
+                <p class="card-text">Quantity is : Last item</p>
+              }
+              @default {
+                <p class="card-text">Quantity is : {{ prd.quantity }}</p>
+              }
+            }
+            <input type="number" #quantityInp />
+            <button
+              class="btn btn-success"
+              (click)="buy(prd.price, quantityInp.value)"
+              [disabled]="prd.quantity == 0"
+            >
+              Buy
+            </button>
+          </div>
+        </div>
+      </div>
+
+  } @empty {
+    <div class="w-100">
+    <div class="w-70 m-auto"><h1>No products to view</h1></div>
+
+    </div>
+  }
+</div>
